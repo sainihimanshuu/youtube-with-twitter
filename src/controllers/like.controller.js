@@ -30,7 +30,7 @@ const toggleVideoLike = asyncHandler( async(req, res) => {
         .json(
             new ApiResponse(
                 200,
-                {},
+                {isLiked: false},
                 "Unliked videos succesfully"
             )
         )
@@ -45,7 +45,7 @@ const toggleVideoLike = asyncHandler( async(req, res) => {
     .json(
         new ApiResponse(
             200,
-            {},
+            {isLiked: true},
             "Liked videos succesfully"
         )
     )
@@ -75,7 +75,7 @@ const toggleCommentLike = asyncHandler( async(req, res) => {
         .json(
             new ApiResponse(
                 200,
-                {},
+                {isLiked: false},
                 "Unliked comment succesfully"
             )
         )
@@ -90,7 +90,7 @@ const toggleCommentLike = asyncHandler( async(req, res) => {
     .json(
         new ApiResponse(
             200,
-            {},
+            {isLiked: true},
             "Liked comment succesfully"
         )
     )
@@ -120,7 +120,7 @@ const toggleTweetLike = asyncHandler( async(req, res) => {
         .json(
             new ApiResponse(
                 200,
-                {},
+                {isLiked: false},
                 "Unliked tweet succesfully"
             )
         )
@@ -135,7 +135,7 @@ const toggleTweetLike = asyncHandler( async(req, res) => {
     .json(
         new ApiResponse(
             200,
-            {},
+            {isLiked: true},
             "Liked tweet succesfully"
         )
     )

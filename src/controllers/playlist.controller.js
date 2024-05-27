@@ -80,6 +80,11 @@ const getPlayListById = asyncHandler( async (req, res) => {
             }
         },
         {
+            $match: {
+                "videos.isPublished": true
+            }
+        },
+        {
             $lookup: {
                 from: "users",
                 localField: "owner",
@@ -235,7 +240,7 @@ const addVideoToPlaylist = asyncHandler( async(req, res) => {
             "failed to add video to playlist please try again"
         );
     }
-    
+
     return res.status(200)
     .json(
         new ApiResponse(
@@ -304,6 +309,35 @@ const getUserPlaylist = asyncHandler( async(req, res) => {
         {
             $match: {
                 owner: userId
+            }
+        },
+        {
+            $lookup: {
+                from: "vidoes",
+                localField: "videos",
+                foreignField: "_id",
+                as: "videos"
+            }
+        },
+        {
+            $addFields: {
+                totalViews: {
+                    $sum: "$videos.viewes"
+                },
+                totalVideos: {
+                    $sum: "$videos"
+                }
+            }
+        },
+        {
+            $project: {
+                _id: 1,
+                totalViews: 1,
+                totalVideos: 1,
+                name: 1,
+                description: 1,
+                updatedAt: 1,
+                createdAt: 1    
             }
         }
     ])
