@@ -1,6 +1,6 @@
 import { asyncHandler } from "../utils/asyncHandler.js"
 import { ApiError } from "../utils/ApiError.js"
-import { ApiResponse } from "../utils/ApiResponse.js";
+import { ApiResponse } from "../utils/ApiResponse.js"
 import { Video } from "../models/video.models.js"
 import { Like } from "../models/like.models.js"
 import { Tweet } from "../models/tweet.models.js"
@@ -18,7 +18,7 @@ const toggleVideoLike = asyncHandler( async(req, res) => {
     if(!video)
         throw new ApiError(400, "no video exists")
 
-    const isLiked = Like.findOne({
+    const isLiked = await Like.findOne({
         video: videoId,
         likedBy: req.user?._id
     })
@@ -161,16 +161,7 @@ const getLikedVideos = asyncHandler( async (req, res) => {
                             from: "users",
                             localField: "owner",
                             foreignField: "_id",
-                            as: "owner",
-                            pipeline: [
-                                {
-                                    $project: {
-                                        username: 1,
-                                        avatar: 1,
-                                        fullName: 1
-                                    }
-                                }
-                            ]
+                            as: "owner"
                         }
                     },
                     {
@@ -180,17 +171,31 @@ const getLikedVideos = asyncHandler( async (req, res) => {
             }
         },
         {
+            $unwind: "$video"
+        },
+        {
             $sort: {
                 createdAt: -1
             }
         },
         {
             $project: {
-                video: 1
+                video: {
+                    videoFile: 1,
+                    thumbnail: 1,
+                    title: 1,
+                    description: 1,
+                    duration: 1,
+                    views: 1,
+                    createdAt: 1,
+                    updatedAt: 1,
+                    owner: {
+                        username: 1,
+                        fullName: 1,
+                        avatar: 1
+                    }
+                }
             }
-        },
-        {
-            $unwind: "$video"
         }
     ])
 
